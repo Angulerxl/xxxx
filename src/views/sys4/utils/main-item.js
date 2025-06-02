@@ -147,12 +147,9 @@ export const _examine_hasRemark = ({ orderDataSource }) => {
   // 判断有咩有备注定制信息，true-有备注定制信息，false-没有
     const res_instruction =  _some(item.goodsList, (obj) => _has(obj, '_instruction') &&!_isEmpty(obj['_instruction']));
     // 定制里，但是没写订单备注和客人备注定制姓名号码的，统一为定制没备注
-    if(res_spec){
-      if (!item.orderRemark && !res_instruction) {
-        examine_hasRemark_Codes.push(item.orderCode);
-      }
+    if (!item.orderRemark && !res_instruction && !res_spec) {
+      examine_hasRemark_Codes.push(item.orderCode);
     }
-   
   });
   return {
     examineHasNoRemarkCodes: _uniq(examine_hasRemark_Codes),
