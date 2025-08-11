@@ -6,7 +6,6 @@
     <el-checkbox-group v-model="checkedIds" @change="handleChange">
       <el-checkbox v-for="item in downBtns" :label="item.value" :key="item.value">{{item.label}}</el-checkbox>
     </el-checkbox-group> -->
-
     <div class="main-btn">
       第三步：<el-button class="main-btn1" style="color: #000000;font-weight: bolder;font-size: 16px;" type="success" @click="onOk">{{buttonText}}</el-button>
     </div>
@@ -34,6 +33,9 @@
           </span>
         </download-excel>
       </span>
+      <download-excel :ref="`download-img`" :class="['export-img img']" :data="jianhaoExport.data || []" :name="jianhaoExport.name">
+        <i class="el-icon-download"></i>捡号（人工检查）
+      </download-excel>
     </span>
 
     <!-- 不常用 -->
@@ -43,19 +45,16 @@
 </template>
 
 <script>
-import {
-  filter as _filter,
-  cloneDeep as _cloneDeep,
-  includes as _includes,
-  find as _find,
-  findIndex as _findIndex,
-  uniqBy as _uniqBy,
-  get as _get,
-} from "lodash";
 import { saveAs } from "file-saver";
-import { _snTxtStr, getDay } from "./utils/main.js";
+import {
+  cloneDeep as _cloneDeep,
+  findIndex as _findIndex
+} from "lodash";
 import { _exportTabel as _exportImg } from "./utils/imgExport.js";
+import { jianhaoExcelInit } from './utils/jianhaoExcel.js';
+import { _snTxtStr, getDay } from "./utils/main.js";
 import { _orderTabel as _exportOrder } from "./utils/ordersExport.js";
+
 const __win_data = JSON.parse(window.localStorage.getItem("__sys4-base"));
 
 //默认选中
@@ -65,6 +64,8 @@ const d = _cloneDeep(initIds);
 const checkedIds = d;
 
 export default {
+  components:{
+  },
   props: {
     fileName:{
       type:String,
@@ -85,7 +86,11 @@ export default {
       checkedIds: checkedIds,
       buttonText: '导出excel：1、下载之前先填顺序 2、再点我生成下载数据',
       timer: "",
-      
+      jianhaoExport: {
+        //报货
+        data: [],
+        name: "",
+      },
       imgExport: {
         //报货
         data: [],
@@ -132,6 +137,7 @@ export default {
       }
       this.timer = getDay();
       this.exportImg(this._EXPORT_DATAS.flatDataSource);
+      this.exportJianhao();
       this.exportOrders(this._EXPORT_DATAS.doOrdersDataSource);
       this.$message.success("导出成功，快去下载");
       this.curStep = '4'
@@ -148,6 +154,12 @@ export default {
     exportImg() {
       this.imgExport.data = _exportImg(this._EXPORT_DATAS.flatDataSource); //图片汇总导出
       this.imgExport.name = `${this.fileName || ""}报货-${this.timer}.xlsx`;
+    },
+    //-----------------导出捡号-----------------
+    exportJianhao() {
+      const resdata = jianhaoExcelInit(this._EXPORT_DATAS.jianhaoDataSource); //图片汇总导出
+      this.jianhaoExport.data = [{'优先捡A号':resdata}]
+      this.jianhaoExport.name = `${this.fileName || ""}捡号-${this.timer}.xlsx`;
     },
     //-----------------导出单号-----------------
     exportSn() {
@@ -176,6 +188,8 @@ export default {
       this.orderExport.name = "";
       this.imgExport.data = [];
       this.imgExport.name = "";
+      this.jianhaoExport.data = [];
+      this.jianhaoExport.name = "";
       this.curStep = '3'
     },
   },

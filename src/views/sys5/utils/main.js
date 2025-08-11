@@ -1,8 +1,9 @@
 import { cloneDeep as _cloneDeep, findIndex as _findIndex } from "lodash";
+import { jianhaoInit } from './jianhao.js';
 import {
+  _examine_hasRemark,
   _getSameBuyer,
-  _noCustomized,
-  _examine_hasRemark
+  _noCustomized
 } from "./main-item.js";
 const __win_data = JSON.parse(window.localStorage.getItem("__sys4-base"));
 
@@ -41,6 +42,7 @@ export const _allSpecDatas = (allDatasObj) => {
   });
   //-------------------默认定制-------------------
   //-------------------人工定制有备注-------------------
+  const _jianhaoDataSource = jianhaoInit(_cloneDeep( _DATA_OBJ.orderDataSource))
   //定制里，但是没写订单备注和客人备注定制姓名号码的，统一为定制没备注
   // ---定制有备注---
   const { examineHasNoRemarkCodes } = _examine_hasRemark({
@@ -64,6 +66,7 @@ export const _allSpecDatas = (allDatasObj) => {
     },
     flatDataSource: _DATA_OBJ.flatDataSource,
     allOrderCodes: _DATA_OBJ.allOrderCodes,
+    jianhaoDataSource: _jianhaoDataSource,
   };
   return obj;
 };
