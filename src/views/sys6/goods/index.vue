@@ -105,22 +105,17 @@ export default {
       downBtns:[]
     };
   },
-  // computed: {
-  //   downBtns:()=>{
-  //     const btn = __win_data?.btns || []
-  //     if(!__win_data['sameBuyerBUyMore']){
-  //       const inx = _findIndex(btn,['value','sys4-sameBuyer'])
-  //       if(inx !== -1){
-  //         btn.splice(inx,1)
-  //       }
-  //     }
-  //     return btn
-  //   }
-  // },
   mounted(){
     const btn = __win_data?.btns || []
       if(!__win_data['sameBuyerBUyMore']){
         const inx = _findIndex(btn,['value','sys4-sameBuyer'])
+        if(inx !== -1){
+          btn.splice(inx,1)
+        }
+      }
+      // 定制缺少定制信息
+      if(!__win_data['dzNoDzInfo']){
+        const inx = _findIndex(btn,['value','sys4-examineHasNoRemark'])
         if(inx !== -1){
           btn.splice(inx,1)
         }

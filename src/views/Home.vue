@@ -3,8 +3,11 @@
     <Lock @login="login" v-if="!islock" />
     <el-tabs v-else v-model="activeName" type="card" @tab-click="handleClick">
       <el-tab-pane label="店小秘" name="first">
-        <Sys5Home />
+        <Sys6Home />
       </el-tab-pane>
+      <!-- <el-tab-pane label="新版" name="first2">
+        <Sys5Home />
+      </el-tab-pane> -->
       <!-- <el-tab-pane label="独立站店小秘" name="first">
         <Sys3Home />
       </el-tab-pane> -->
@@ -20,12 +23,8 @@
 </template>
 
 <script>
-import Main from "./Main.vue";
 import Lock from "./Lock.vue";
-import Sys2Home from "./sys2/home.vue";
-import Sys3Home from "./sys3/home.vue";
-import Sys4Home from "./sys4/home.vue";
-import Sys5Home from "./sys5/home.vue";
+import Sys6Home from "./sys6/home.vue";
 
 export default {
   name: "Home",
@@ -35,7 +34,7 @@ export default {
     // Sys2Home,
     // Sys3Home,
     // Sys4Home,
-    Sys5Home,
+    Sys6Home,
   },
   mounted() {},
   data: () => {
