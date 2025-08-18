@@ -5,7 +5,6 @@
     <el-tabs value="customized" @tab-click="handleClick" class="demo-dynamic">
       <el-tab-pane label="金额" name="priceLimit">
         <el-form :model="formData" ref="formData">
-          <el-form-item prop="money" :rules="[{ required: true, message: '不能为空保存', trigger: 'blur' }, ]">
             <el-input v-model="formData.money" placeholder="设置超过多少钱拿出这个单"></el-input>
           </el-form-item>
         </el-form>
