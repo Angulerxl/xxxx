@@ -21,4 +21,4 @@ yarn lint
 ```
 
 ### 
-build->push->npm run deploy发布
+build->push->npm run deploy
