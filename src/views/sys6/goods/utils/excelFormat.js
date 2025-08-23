@@ -6,16 +6,17 @@ const emptyBottomTable = `<table>
 
 //----------报货的-------------
 export const imgTable = ({ img, specStr, productName }) => {
+    const prodName = simplifyProductName(productName)
   return `<table border="1"  align="center" bgcolor="#e5e9f2">  
     <tr align="center" valign="center">
         <td  height=200 width=200  align="center" valign="center"> <img src="https:${img}" width="160" height="160" /></td>
     </tr>
     <tr align="center">
         <td width="200">${specStr}</td>
-    </tr> 
-    <tr align="center">
-        <td width="200">${productName}</td>
-    </tr>     
+    </tr>  
+     <tr align="center">
+        <td width="200">${prodName}</td>
+    </tr>   
 </table>`;
 };
 
@@ -143,3 +144,7 @@ export const orderTable = ({
     </tr>
     </table>`;
 };
+
+const simplifyProductName = (str)=>{
+  return str.replace(/Football Shirt?( Kids Size)? 1:1 Thai Quality/g, '').trim();
+}
