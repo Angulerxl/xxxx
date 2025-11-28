@@ -42,8 +42,7 @@ export const _setColor = () => {
 
 
 // 分切产品规格的数据
-//Size-尺寸， Specification-套装， CUSTOM PATCH-补丁， MODEL-袜子(值就是尺寸)，Custom Items-定制，Instruction-备注
-export const _splitChangPingGuiGe = (str)=> {
+export const _splitChangPingGuiGeOld = (str)=> {
     str = str.replaceAll('Other(Add In The Instruction)','With name and number')
     str = str.replaceAll('Custom ltems','Custom Items')
     str = str.replaceAll('Custom name and number','Custom Items')
@@ -87,6 +86,85 @@ export const _splitChangPingGuiGe = (str)=> {
     }
     
     return resultObj;
+
+}
+//Size-尺寸， Specification-套装， CUSTOM PATCH-补丁， MODEL-袜子(值就是尺寸)，Custom Items-定制，Instruction-备注
+export const _splitChangPingGuiGe = (str) => {
+  // 1. 规范字符串
+  str = str.replaceAll('Other(Add In The Instruction)', 'With name and number');
+  str = str.replaceAll('Custom ltems', 'Custom Items');
+  str = str.replaceAll('Custom name and number', 'Custom Items');
+
+  const keywords = [
+    'Size',
+    'Specification',
+    'CUSTOM PATCH',
+    'PATCH',
+    'Custom Patch',
+    'Patch',
+    'MODEL',
+    'Custom Items',
+    'Instruction',
+    'Name and Number'
+  ];
+
+  const resultObj = {};
+  const keywordToCamel = {};
+
+  // 2. 把关键字转成驼峰，并将所有 Patch 字段统一成 customPatch
+  keywords.forEach((keyword) => {
+    let camel = keyword
+      .toLowerCase()
+      .split(' ')
+      .map((word, index) =>
+        index === 0 ? word : word.charAt(0).toUpperCase() + word.slice(1)
+      )
+      .join('');
+
+    // 🔥 所有 PATCH 都归到 customPatch 字段
+    if (/patch/i.test(keyword)) {
+      camel = 'customPatch';
+    }
+
+    keywordToCamel[keyword] = camel;
+
+    // 初始化结果对象
+    if (!(camel in resultObj)) {
+      resultObj[camel] = '';
+    }
+  });
+
+  // 3. 构造匹配 “关键字 + 冒号” 的正则
+  const escapedKeywords = keywords.map(k =>
+    k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  );
+  const regex = new RegExp(`(${escapedKeywords.join('|')})\\s*:`, 'g');
+
+  // 4. 找出所有匹配位置
+  const matches = [];
+  let m;
+  while ((m = regex.exec(str)) !== null) {
+    matches.push({
+      keyword: m[1],
+      start: m.index,
+      valueStart: regex.lastIndex
+    });
+  }
+
+  // 5. 切片值填入对象
+  for (let i = 0; i < matches.length; i++) {
+    const current = matches[i];
+    const next = matches[i + 1];
+    const end = next ? next.start : str.length;
+
+    let value = str.slice(current.valueStart, end).trim();
+    if (value.startsWith(':')) value = value.slice(1).trim();
+
+    const camelKey = keywordToCamel[current.keyword];
+    resultObj[camelKey] = value;
+  }
+
+  return resultObj;
 
 }
 

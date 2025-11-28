@@ -1,6 +1,6 @@
 import { _setKeyCnToEn } from "../utils/enum.js";
 import { cloneDeep as _cloneDeep, findIndex as _findIndex,some as _some,has as _has } from "lodash";
-import { _removeSizeSymbol, _setColor,_splitChangPingGuiGe, _setCnPatch,_setCnModel,_setCnSpecification} from "./basicConf.js";
+import { _removeSizeSymbol, _setColor,_splitChangPingGuiGe,_splitChangPingGuiGeOld, _setCnPatch,_setCnModel,_setCnSpecification} from "./basicConf.js";
 
 // 
   export const _setDataFormatBefore = (datas) => {
